@@ -64,9 +64,9 @@ echo "✅ Table 'event_logs' created/verified\n";
 
 // Insert some initial inventory
 try {
-    $pdo->exec("INSERT INTO inventory (product_name, quantity) VALUES ('Produto A', 100)");
-    $pdo->exec("INSERT INTO inventory (product_name, quantity) VALUES ('Produto B', 50)");
-    $pdo->exec("INSERT INTO inventory (product_name, quantity) VALUES ('Produto C', 75)");
+    $pdo->exec("INSERT INTO inventory (product_name, quantity) VALUES ('Iphone', 100)");
+    $pdo->exec("INSERT INTO inventory (product_name, quantity) VALUES ('Notebook', 50)");
+    $pdo->exec("INSERT INTO inventory (product_name, quantity) VALUES ('Monitor', 75)");
     echo "✅ Initial inventory data inserted\n";
 } catch (\Exception $e) {
     echo "ℹ️  Inventory data already exists\n";
