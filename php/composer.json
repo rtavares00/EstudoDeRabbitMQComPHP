@@ -1,0 +1,23 @@
+{
+    "name": "ecommerce/rabbitmq-study",
+    "description": "RabbitMQ Learning Project - E-commerce System",
+    "type": "project",
+    "require": {
+        "php": "^8.1",
+        "php-amqplib/php-amqplib": "^3.2",
+        "symfony/dotenv": "^6.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        },
+        "files": [
+            "config/bootstrap.php"
+        ]
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    }
+}
