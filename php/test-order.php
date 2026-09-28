@@ -54,8 +54,6 @@ try {
     echo "   • payment-processor (binding: order.created)\n";
     echo "   • notification-logs (binding: order.#)\n\n";
 
-    Connection::close();
-
     echo str_repeat("=", 60) . "\n";
     echo "✨ Teste concluído com sucesso!\n";
     echo str_repeat("=", 60) . "\n\n";
