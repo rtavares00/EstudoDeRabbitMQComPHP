@@ -4,6 +4,7 @@ require_once __DIR__ . '/../config/bootstrap.php';
 
 use App\RabbitMQ\Connection;
 use PhpAmqpLib\Message\AMQPMessage;
+use PhpAmqpLib\Wire\AMQPTable;
 
 $channel = Connection::getChannel();
 
@@ -20,18 +21,34 @@ $channel->exchange_declare(
 );
 echo "✅ Exchange 'ecommerce' created\n\n";
 
+// ========== DEAD LETTER (DLX + DLQ) ==========
+// Pattern: Dead Letter Channel. Mensagem rejeitada sem requeue
+// (nack(false)/reject(false)) é desviada pra cá em vez de sumir.
+echo "☠️  Creating dead letter exchange 'ecommerce-dlx' (DIRECT)...\n";
+$channel->exchange_declare('ecommerce-dlx', 'direct', false, true, false);
+echo "✅ Exchange 'ecommerce-dlx' created\n";
+
+$channel->queue_declare('payment-processor-dlq', false, true, false, false);
+$channel->queue_bind('payment-processor-dlq', 'ecommerce-dlx', 'payment.dead');
+echo "✅ Queue 'payment-processor-dlq' created and bound to 'ecommerce-dlx'\n\n";
+
 // ========== QUEUES ==========
 echo "📦 Creating queues...\n";
 
-// Queue 1: Payment Processor
+// Queue 1: Payment Processor (com DLX configurado desde o nascimento)
 $channel->queue_declare(
     'payment-processor',
     false,    // passive
     true,     // durable
     false,    // exclusive
-    false     // auto_delete
+    false,    // auto_delete
+    false,    // nowait
+    new AMQPTable([
+        'x-dead-letter-exchange'    => 'ecommerce-dlx',
+        'x-dead-letter-routing-key' => 'payment.dead',
+    ])
 );
-echo "✅ Queue 'payment-processor' created\n";
+echo "✅ Queue 'payment-processor' created (com DLX)\n";
 
 // Queue 2: Notification - Approved
 $channel->queue_declare(

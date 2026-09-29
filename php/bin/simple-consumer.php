@@ -59,7 +59,8 @@ try {
     $consumerTag = 'simple-consumer-' . uniqid();
     $channel->basic_consume(
         'payment-processor',  // Fila
-        $consumerTag,    // Consumer tag (nome único)
+        //$consumerTag,    // Consumer tag (nome único)
+        '',
         false,                // No local
         false,                // No auto ack (manual)
         false,                // No exclusive
